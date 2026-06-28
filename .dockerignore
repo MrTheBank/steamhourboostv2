@@ -1,1 +1,14 @@
 .git
+.gitignore
+.idea
+node_modules
+npm-debug.log*
+yarn-error.log*
+config
+*.md
+docs
+.env
+.env.*
+Dockerfile
+docker-compose.yml
+.dockerignore

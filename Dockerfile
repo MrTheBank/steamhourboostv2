@@ -1,10 +1,23 @@
-FROM mhart/alpine-node:9
-WORKDIR /app
-COPY . /app
-RUN yarn install --production && yarn cache clean
+FROM node:16-alpine AS deps
 
-FROM mhart/alpine-node:base-9
 WORKDIR /app
-COPY --from=0 /app .
-COPY . .
-CMD [ "node", "/app/lib/app.js" ]
+
+COPY package.json package-lock.json ./
+
+RUN npm ci --omit=dev && npm cache clean --force
+
+FROM node:16-alpine
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN mkdir -p config && chown node:node config
+
+COPY --from=deps --chown=node:node /app/node_modules ./node_modules
+COPY --chown=node:node package.json ./
+COPY --chown=node:node lib ./lib
+
+USER node
+
+CMD ["node", "lib/app.js"]

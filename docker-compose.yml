@@ -1,10 +1,10 @@
+version: "3.3"
+
 services:
   hourboost:
     build: .
     image: steamhourboostv2:local
     container_name: steamhourboost
     restart: unless-stopped
-    init: true
     volumes:
-      # Persist Steam accounts and optional Telegram bot config on the host.
       - ./config:/app/config
